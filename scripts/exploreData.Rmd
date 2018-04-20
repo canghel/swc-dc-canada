@@ -23,7 +23,13 @@ suppressWarnings(suppressMessages(library(mapdata)))
 suppressWarnings(suppressMessages(library(ggmap)))
 suppressWarnings(suppressMessages(library(marmap)))
 suppressWarnings(suppressMessages(library(lattice)))
+
+# for general plotting
 suppressWarnings(suppressMessages(library(RColorBrewer)))
+
+# for plotting flags
+library(ggplot2)
+library(ggflags)
 
 # path to the data
 pathData <- file.path('..', 'data');
@@ -114,10 +120,22 @@ print(codeCounts)
 
 Create a bar plot of the location codes, coloured by the province.  The code is messy again, since wanted to manually adjust the colour order.
 ```{r fig.width=20}
-# trying to make the colours nicer
-provColours <- brewer.pal(n = 12, name = "Set3")[c(3,2,7,4,5,6,1,8,9,10)]
-provColours <- provColours[as.numeric(as.factor(codeCounts$province))]
-barplot(codeCounts$n, names.arg=codeCounts$simpleCode, col=provColours, cex.names=1,las=2)
+# number of provinces/territories where SWC has been 
+numProv <- max(as.numeric(as.factor(codeCounts$province)))
+# trying to make the colours nicer, hence rearrangement of colors
+provPal <- brewer.pal(n = numProv, name = "Set3")[c(3,2,7,4,5,6,1,8,9)]
+provColours <- provPal[as.numeric(as.factor(codeCounts$province))]
+barplot(codeCounts$n, 
+        names.arg=codeCounts$simpleCode, 
+        col=provColours, 
+        cex.names=0.8,
+        las=2,
+        ylab='number of SWC workshops',
+        cex.lab=1.5,
+        main='Locations of past SWC workshops in Canada',
+        cex.main=2.5
+        )
+legend('topright', legend=levels(as.factor(codeCounts$province)), fill=provPal, cex=1)
 ```
 
 ### Map of Canada and SWC frequencies
@@ -153,7 +171,7 @@ Colour provinces in the map of Canada by how many SWC workshops have occurred th
 
 # Specify a geographic extent for the map
 # by defining the top-left and bottom-right geographic coordinates
-mapExtent <- rbind(c(-156, 80), c(-68, 19))
+mapExtent <- rbind(c(-156, 80), c(-68, 40))
 
 # Specify the required projection using a proj4 string
 # Use http://www.spatialreference.org/ to find the required string
@@ -167,7 +185,7 @@ mapExtentPr <- spTransform(SpatialPoints(mapExtent,
                   newProj)
 
 can1Pr <- spTransform(Canada, newProj)
-plot(mapExtentPr, pch=NA)
+plot(mapExtentPr, pch=NA, main='Frequency of past SWC workshops in Canada by province')
 plot(can1Pr, border="black", col="lightgrey", add=TRUE)
 
 # loop over the provinces, colouring them according to the number of 
@@ -178,22 +196,29 @@ for (jj in 1:length(colInd)){
 legend('topleft', legend=c(1,NA,10,NA,20,NA,30,NA,40,NA,50), fill=colVals[c(1,seq(5, 50, 5))], bty="n", x.intersp = 2, y.intersp = .5)
 ```
 
-## Comparison with US and UK
+## Comparison with US, UK, and Australia
 
+Plot the number of SWC workshops in US, UK, and Australia over time. 
 ```{r fig.width=10}
-data = read.csv("countryCounts.txt", header=FALSE)
+data = read.csv(file.path(pathData,'2018-04-20-countryCounts.txt'), header=FALSE)
 colnames(data) = c("location", "year", "count");
 data$location = gsub(".png", "", data$location);
 
-usData = data[data$location=="us",];
-caData = data[data$location=="ca",];
-gbData = data[data$location=="gb",];
+# usData = data[data$location=="us",];
+# caData = data[data$location=="ca",];
+# gbData = data[data$location=="gb",];
+# auData = data[data$location=="au",];
+# 
+# plot(usData$year, usData$count, col="blue", pch=19, ylab="number SWC workshops", xlab="year", ylim=c(-5, 140))
+# points(gbData$year, gbData$count, col="green", pch=15)
+#  geom_flag(aes(x = x, y = y, country = country), size = 50, stroke = 2)
+# points(caData$year, caData$count, col="red", pch=17)
+# points(auData$year, auData$count, col="pink", pch=16)
+# legend('topleft', c("US", "CAN", "UK", "AU"), col = c("blue", "red", "green", "black"), pch=c(19, 17, 15, 16))
+# 
+# ratioCounts = usData$count/caData$count
+# plot(usData$year, ratioCounts, col="blue", pch=19, ylab="ratio US/CAN past workshops", xlab="year")
 
-plot(usData$year, usData$count, col="blue", pch=19, ylab="number SWC workshops", xlab="year", ylim=c(-5, 140))
-points(gbData$year, gbData$count, col="green", pch=15)
-points(caData$year, caData$count, col="red", pch=17)
-legend('topleft', c("US", "CAN", "UK"), col = c("blue", "red", "green"), pch=c(19, 17, 15))
-
-ratioCounts = usData$count/caData$count
-plot(usData$year, ratioCounts, col="blue", pch=19, ylab="ratio US/CAN past workshops", xlab="year")
+ggplot(data, aes(x=year, y=count, country=location, col=location)) + geom_line(size=1) + geom_flag(size=7) + scale_color_manual(values=c("gray48", "red", "blue4", "black")) +
+  ylab('number of SWC workshops') + scale_x_continuous(breaks=data$year, labels=data$year, minor_breaks=data$year) + theme(legend.position="none", plot.title = element_text(hjust = 0.5)) + ggtitle('Number of past SWC workshops in US, UK, Australia, and Canada')
 ```
