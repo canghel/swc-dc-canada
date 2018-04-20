@@ -242,4 +242,28 @@ for (jj in 1:length(colInd)){
 legend('topleft', legend=c(1,NA,10,NA,20,NA,30,NA,40,NA,50), fill=colVals[c(1,seq(5, 50, 5))], bty="n", x.intersp = 2, y.intersp = .5)
 ```
 
-![](exploreData_files/figure-markdown_github/unnamed-chunk-13-1.png)
+![](exploreData_files/figure-markdown_github/unnamed-chunk-13-1.png) \#\# Comparison with US and UK
+
+``` r
+data = read.csv("countryCounts.txt", header=FALSE)
+colnames(data) = c("location", "year", "count");
+data$location = gsub(".png", "", data$location);
+
+usData = data[data$location=="us",];
+caData = data[data$location=="ca",];
+gbData = data[data$location=="gb",];
+
+plot(usData$year, usData$count, col="blue", pch=19, ylab="number SWC workshops", xlab="year", ylim=c(-5, 140))
+points(gbData$year, gbData$count, col="green", pch=15)
+points(caData$year, caData$count, col="red", pch=17)
+legend('topleft', c("US", "CAN", "UK"), col = c("blue", "red", "green"), pch=c(19, 17, 15))
+```
+
+![](exploreData_files/figure-markdown_github/unnamed-chunk-14-1.png)
+
+``` r
+ratioCounts = usData$count/caData$count
+plot(usData$year, ratioCounts, col="blue", pch=19, ylab="ratio US/CAN past workshops", xlab="year")
+```
+
+![](exploreData_files/figure-markdown_github/unnamed-chunk-14-2.png)
