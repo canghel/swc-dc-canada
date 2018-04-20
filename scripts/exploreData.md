@@ -242,7 +242,10 @@ for (jj in 1:length(colInd)){
 legend('topleft', legend=c(1,NA,10,NA,20,NA,30,NA,40,NA,50), fill=colVals[c(1,seq(5, 50, 5))], bty="n", x.intersp = 2, y.intersp = .5)
 ```
 
-![](exploreData_files/figure-markdown_github/unnamed-chunk-13-1.png) \#\# Comparison with US and UK
+![](exploreData_files/figure-markdown_github/unnamed-chunk-13-1.png)
+
+Comparison with US and UK
+-------------------------
 
 ``` r
 data = read.csv("countryCounts.txt", header=FALSE)
