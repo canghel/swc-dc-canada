@@ -13,123 +13,27 @@ Load libraries and define paths.
 
 ``` r
 # for data frames
-library(dplyr)
-```
+suppressWarnings(suppressMessages(library(dplyr)))
 
-    ## Warning: package 'dplyr' was built under R version 3.4.3
-
-    ## 
-    ## Attaching package: 'dplyr'
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
-
-``` r
 # for making maps
-library(maptools)
-```
+suppressWarnings(suppressMessages(library(maptools)))
+suppressWarnings(suppressMessages(library(rgdal)))
+suppressWarnings(suppressMessages(library(raster)))
+suppressWarnings(suppressMessages(library(maps)))
+suppressWarnings(suppressMessages(library(mapdata)))
+suppressWarnings(suppressMessages(library(ggmap)))
+suppressWarnings(suppressMessages(library(marmap)))
+suppressWarnings(suppressMessages(library(lattice)))
+suppressWarnings(suppressMessages(library(RColorBrewer)))
 
-    ## Warning: package 'maptools' was built under R version 3.4.4
-
-    ## Loading required package: sp
-
-    ## Warning: package 'sp' was built under R version 3.4.4
-
-    ## Checking rgeos availability: FALSE
-    ##      Note: when rgeos is not available, polygon geometry     computations in maptools depend on gpclib,
-    ##      which has a restricted licence. It is disabled by default;
-    ##      to enable gpclib, type gpclibPermit()
-
-``` r
-library(rgdal)
-```
-
-    ## Warning: package 'rgdal' was built under R version 3.4.4
-
-    ## rgdal: version: 1.2-18, (SVN revision 718)
-    ##  Geospatial Data Abstraction Library extensions to R successfully loaded
-    ##  Loaded GDAL runtime: GDAL 2.2.3, released 2017/11/20
-    ##  Path to GDAL shared files: C:/Users/Catalina/Documents/R/win-library/3.4/rgdal/gdal
-    ##  GDAL binary built with GEOS: TRUE 
-    ##  Loaded PROJ.4 runtime: Rel. 4.9.3, 15 August 2016, [PJ_VERSION: 493]
-    ##  Path to PROJ.4 shared files: C:/Users/Catalina/Documents/R/win-library/3.4/rgdal/proj
-    ##  Linking to sp version: 1.2-7
-
-``` r
-library(raster)
-```
-
-    ## Warning: package 'raster' was built under R version 3.4.4
-
-    ## 
-    ## Attaching package: 'raster'
-
-    ## The following object is masked from 'package:dplyr':
-    ## 
-    ##     select
-
-``` r
-library(maps)
-```
-
-    ## Warning: package 'maps' was built under R version 3.4.4
-
-``` r
-library(mapdata)
-```
-
-    ## Warning: package 'mapdata' was built under R version 3.4.4
-
-``` r
-library(ggmap)
-```
-
-    ## Warning: package 'ggmap' was built under R version 3.4.4
-
-    ## Loading required package: ggplot2
-
-    ## Warning: package 'ggplot2' was built under R version 3.4.4
-
-``` r
-library(marmap)
-```
-
-    ## Warning: package 'marmap' was built under R version 3.4.4
-
-    ## 
-    ## Attaching package: 'marmap'
-
-    ## The following object is masked from 'package:raster':
-    ## 
-    ##     as.raster
-
-    ## The following object is masked from 'package:grDevices':
-    ## 
-    ##     as.raster
-
-``` r
-library(lattice)
-```
-
-    ## Warning: package 'lattice' was built under R version 3.4.4
-
-``` r
-library(RColorBrewer)
-```
-
-``` r
+# path to the data
 pathData <- file.path('..', 'data');
 ```
 
 Data setup
 ----------
 
-The first step is to parse the html files for the Canadian locations. This is kind of embarrassing... I really have to learn more regex!
+The first step is to collect the data for all the past Canadian SWC workshop locations. This involves parsing html files. This is kind of embarrassing... I really have to learn more regex! And scraping web files...
 
 The following command partially parses the information from Canadian SWC workshops:
 
@@ -145,8 +49,9 @@ grep -A1 "ca.png" ../data/2018-04-17-swc-list.html | grep -P "(20[0-9]{2}-[0-9]{
 
 There should be 125 workshops.
 
+Read in the partially parsed file.
+
 ``` r
-# read in the partially parsed file
 temp <- read.csv(
     file = file.path(pathData, '2018-04-19-swc-parsed1.txt'),
     header = FALSE,
@@ -173,17 +78,20 @@ print(head(temp))
     ## 5     2017-12-12-acadia                   ">Acadia University< a>< td>
     ## 6        2017-12-02-mun                 ">Memorial University< a>< td>
 
+Collect all the data in a dataframe.
+
 ``` r
-# collect all the data in a dataframe 
 swc <- data.frame(matrix(, nrow=nrow(temp), ncol=0))
 swc$code <- tolower(substring(temp$V1, 12))
 swc$year <- substr(temp$V1, 1, 4)
 swc$month <- substr(temp$V1, 6,7)
 swc$day <- substr(temp$V1, 9,10)
 swc$location <- gsub("<", "", gsub('">',"", temp$V2))
+```
 
-# clean up some of the redundancies in "code" field
-# done manually (hence boring code)
+Clean up some of the redundancies in "code" field. This is done one manually (hence boring code).
+
+``` r
 swc$simpleCode <- swc$code;
 swc$simpleCode <- gsub("swc-", "", swc$simpleCode)
 swc$simpleCode <- gsub("-python", "", swc$simpleCode)
@@ -199,9 +107,9 @@ swc$simpleCode[grep("University of Calgary", swc$location)] <- "ucalgary";
 swc$simpleCode[grep("Queen", swc$location)] <- "queensu";
 ```
 
+Include province information. Again, this is also done manually.
+
 ``` r
-# include province information
-# again, also done manually
 swc$province <- NA;
 swc$province[swc$simpleCode %in% c("ubc", "ubco", "sfu", "uvic")] <- "British Columbia";
 swc$province[swc$simpleCode %in% c("queensu", "utoronto", "toronto", "yorku", "mcmaster", "uwaterloo", "uoit", "brocku", "camh", "conestoga", "uguelph", "uwo", "sickkids", "wise-toronto", "oicr-toronto", "mozilla")] <- "Ontario";
@@ -215,14 +123,57 @@ swc$province[swc$simpleCode %in% c("unb")] <- "New Brunswick";
 swc$province[swc$simpleCode %in% c("caims")] <- "Saskatchewan";
 ```
 
+Visualize SWC locations in Canada
+---------------------------------
+
+### Bar plot of most common location codes
+
+First, find the most common locations for SWC workshops. Summarize the number of different codes in the data frame `swc`, and group them by province as well.
+
 ``` r
-# find the number of SWC workshops per province
-provinceCounts <- swc %>% group_by(province) %>% summarise(n=n()) %>% ungroup() %>% arrange(-n)
+# find the number of SWC workshops per code
+codeCounts <- swc %>% group_by(simpleCode, province) %>% summarise( n=n()) %>% ungroup() %>% arrange(-n)
 ```
 
     ## Warning: package 'bindrcpp' was built under R version 3.4.4
 
 ``` r
+print(codeCounts)
+```
+
+    ## # A tibble: 40 x 3
+    ##    simpleCode       province                      n
+    ##    <chr>            <chr>                     <int>
+    ##  1 ubc              British Columbia             21
+    ##  2 utoronto         Ontario                      14
+    ##  3 sfu              British Columbia             10
+    ##  4 uwaterloo        Ontario                       9
+    ##  5 ualberta         Alberta                       7
+    ##  6 mcgill           Quebec                        6
+    ##  7 mcmaster         Ontario                       5
+    ##  8 conestoga        Ontario                       4
+    ##  9 universite-laval Quebec                        4
+    ## 10 mun              Newfoundland and Labrador     3
+    ## # ... with 30 more rows
+
+Create a bar plot of the location codes, coloured by the province. The code is messy again, since wanted to manually adjust the colour order.
+
+``` r
+# trying to make the colours nicer
+provColours <- brewer.pal(n = 12, name = "Set3")[c(3,2,7,4,5,6,1,8,9,10)]
+provColours <- provColours[as.numeric(as.factor(codeCounts$province))]
+barplot(codeCounts$n, names.arg=codeCounts$simpleCode, col=provColours, cex.names=1,las=2)
+```
+
+![](exploreData_files/figure-markdown_github/unnamed-chunk-9-1.png)
+
+### Map of Canada and SWC frequencies
+
+In the next step, create a map of Canada, were each province is coloured by the number of past SWC workshops which have occured there. First, summarize the data frame `swc` by provinces.
+
+``` r
+# find the number of SWC workshops per province
+provinceCounts <- swc %>% group_by(province) %>% summarise(n=n()) %>% ungroup() %>% arrange(-n)
 print(provinceCounts)
 ```
 
@@ -239,19 +190,29 @@ print(provinceCounts)
     ## 8 New Brunswick                 1
     ## 9 Saskatchewan                  1
 
+Start setting up the plotting information by defining the colour palette and getting the map data.
+
 ``` r
 # create colour gradient
 colfunc <- colorRampPalette(c("yellow","red"))
 colVals <- colfunc(max(provinceCounts$n));
 colInd <- provinceCounts$n;
- 
+
 # get the map of Canada
 Canada <- getData('GADM', country="CAN", level=1)
+```
 
+The province of Quebec has an accent on the 'e' in `NAME_1`, so need to match the map and `swc` data frame data manually.
+
+``` r
 # match the province names in the table with the
 provInd <- match(provinceCounts$province, Canada$NAME_1);
 provInd[is.na(provInd)] <- 13;
+```
 
+Colour provinces in the map of Canada by how many SWC workshops have occurred there.
+
+``` r
 # Very pretty code from: https://stackoverflow.com/questions/10763421/r-creating-a-map-of-selected-canadian-provinces-and-u-s-states?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
 
 # Specify a geographic extent for the map
@@ -281,4 +242,4 @@ for (jj in 1:length(colInd)){
 legend('topleft', legend=c(1,NA,10,NA,20,NA,30,NA,40,NA,50), fill=colVals[c(1,seq(5, 50, 5))], bty="n", x.intersp = 2, y.intersp = .5)
 ```
 
-![](exploreData_files/figure-markdown_github/unnamed-chunk-8-1.png)
+![](exploreData_files/figure-markdown_github/unnamed-chunk-13-1.png)
