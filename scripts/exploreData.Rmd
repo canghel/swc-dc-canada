@@ -1,6 +1,6 @@
 ---
 title: "SWC/DC Workshops in Canada"
-output: html_notebook
+output: rmarkdown::github_document
 ---
 
 ## Motivation
