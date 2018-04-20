@@ -1,0 +1,151 @@
+---
+title: "SWC/DC Workshops in Canada"
+output: html_notebook
+---
+
+## Motivation
+
+My goal in joining the Carpentries mentorship group is to help in community building in Canada.  In particular, I would like to increase both geographical and institutional diversity of Software Carpentry and Data Carpentry workshops.  I thought it might be useful to look at the locations of past workshops.
+
+## Preamble
+
+Load libraries and define paths.
+
+```{r}
+# for data frames
+library(dplyr)
+
+# for making maps
+library(maptools)
+library(rgdal)
+library(raster)
+library(maps)
+library(mapdata)
+library(ggmap)
+library(marmap)
+library(lattice)
+library(RColorBrewer)
+```
+
+```{r}
+pathData <- file.path('..', 'data');
+```
+
+## Data setup
+
+The first step is to parse the html files for the Canadian locations.  This is kind of embarrassing... I really have to learn more regex!  
+
+The following command partially parses the information from Canadian SWC workshops:
+
+```{shell eval=FALSE}
+grep -A1 "ca.png" ../data/2018-04-17-swc-list.html | grep -P "(20[0-9]{2}-[0-9]{2}-[0-9]{2})" | grep -oP "(20*).*" > ../data/2018-04-19-swc-parsed1.txt
+```
+
+Sanity check:
+```{shell eval=FALSE}
+grep -A1 "ca.png" ../data/2018-04-17-swc-list.html | grep -P "(20[0-9]{2}-[0-9]{2}-[0-9]{2})" | wc -l
+```
+There should be 125 workshops.
+
+```{r}
+# read in the partially parsed file
+temp <- read.csv(
+	file = file.path(pathData, '2018-04-19-swc-parsed1.txt'),
+	header = FALSE,
+	stringsAsFactors = FALSE,
+	quote="",
+	sep="/"
+);
+
+# sanity checks
+print(nrow(temp))
+print(head(temp))
+
+# collect all the data in a dataframe 
+swc <- data.frame(matrix(, nrow=nrow(temp), ncol=0))
+swc$code <- tolower(substring(temp$V1, 12))
+swc$year <- substr(temp$V1, 1, 4)
+swc$month <- substr(temp$V1, 6,7)
+swc$day <- substr(temp$V1, 9,10)
+swc$location <- gsub("<", "", gsub('">',"", temp$V2))
+
+# clean up some of the redundancies in "code" field
+# done manually (hence boring code)
+swc$simpleCode <- swc$code;
+swc$simpleCode <- gsub("swc-", "", swc$simpleCode)
+swc$simpleCode <- gsub("-python", "", swc$simpleCode)
+swc$simpleCode[26] <- "uvic";
+swc$simpleCode <- gsub("york-university", "yorku", swc$simpleCode)
+swc$simpleCode <- gsub("lsiubc", "ubc", swc$simpleCode)
+swc$simpleCode <- gsub("^waterloo", "uwaterloo", swc$simpleCode)
+swc$simpleCode <- gsub("^alberta", "ualberta", swc$simpleCode)
+swc$simpleCode <- gsub("^westernu", "uwo", swc$simpleCode)
+swc$simpleCode <- gsub("smu", "saintmarys", swc$simpleCode)
+swc$simpleCode[grep("University of Toronto", swc$location)] <- "utoronto";
+swc$simpleCode[grep("University of Calgary", swc$location)] <- "ucalgary";
+swc$simpleCode[grep("Queen", swc$location)] <- "queensu";
+```
+
+```{r}
+# include province information
+# again, also done manually
+swc$province <- NA;
+swc$province[swc$simpleCode %in% c("ubc", "ubco", "sfu", "uvic")] <- "British Columbia";
+swc$province[swc$simpleCode %in% c("queensu", "utoronto", "toronto", "yorku", "mcmaster", "uwaterloo", "uoit", "brocku", "camh", "conestoga", "uguelph", "uwo", "sickkids", "wise-toronto", "oicr-toronto", "mozilla")] <- "Ontario";
+swc$province[swc$simpleCode %in% c("mcgill", "uqam", "universite-laval", "umontreal", "montreal", "fmv")] <- "Quebec";
+swc$province[grep("pycon", swc$simpleCode)] <- "Quebec";
+swc$province[swc$simpleCode %in% c("mun")] <- "Newfoundland and Labrador";
+swc$province[swc$simpleCode %in% c("halifax", "dalhousie", "acadia", "saintmarys")] <- "Nova Scotia";
+swc$province[swc$simpleCode %in% c("ualberta", "ucalgary")] <- "Alberta";
+swc$province[swc$simpleCode %in% c("umanitoba")] <- "Manitoba";
+swc$province[swc$simpleCode %in% c("unb")] <- "New Brunswick";
+swc$province[swc$simpleCode %in% c("caims")] <- "Saskatchewan";
+```
+
+```{r}
+# find the number of SWC workshops per province
+provinceCounts <- swc %>% group_by(province) %>% summarise(n=n()) %>% ungroup() %>% arrange(-n)
+print(provinceCounts)
+```
+
+```{r fig.width=20}
+# create colour gradient
+colfunc <- colorRampPalette(c("yellow","red"))
+colVals <- colfunc(max(provinceCounts$n));
+colInd <- provinceCounts$n;
+ 
+# get the map of Canada
+Canada <- getData('GADM', country="CAN", level=1)
+
+# match the province names in the table with the
+provInd <- match(provinceCounts$province, Canada$NAME_1);
+provInd[is.na(provInd)] <- 13;
+
+# Very pretty code from: https://stackoverflow.com/questions/10763421/r-creating-a-map-of-selected-canadian-provinces-and-u-s-states?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+
+# Specify a geographic extent for the map
+# by defining the top-left and bottom-right geographic coordinates
+mapExtent <- rbind(c(-156, 80), c(-68, 19))
+
+# Specify the required projection using a proj4 string
+# Use http://www.spatialreference.org/ to find the required string
+# Polyconic for North America
+newProj <- CRS("+proj=poly +lat_0=0 +lon_0=-100 +x_0=0 
+            +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs")
+
+## Project the map extent (first need to specify that it is longlat) 
+mapExtentPr <- spTransform(SpatialPoints(mapExtent, 
+                  proj4string=CRS("+proj=longlat")),
+                  newProj)
+
+can1Pr <- spTransform(Canada, newProj)
+plot(mapExtentPr, pch=NA)
+plot(can1Pr, border="black", col="lightgrey", add=TRUE)
+
+# loop over the provinces, colouring them according to the number of 
+# workshops that have occured there
+for (jj in 1:length(colInd)){
+  plot(can1Pr[provInd[jj],], border="black", col=colVals[colInd[jj]], add=TRUE)
+}
+legend('topleft', legend=c(1,NA,10,NA,20,NA,30,NA,40,NA,50), fill=colVals[c(1,seq(5, 50, 5))], bty="n", x.intersp = 2, y.intersp = .5)
+```

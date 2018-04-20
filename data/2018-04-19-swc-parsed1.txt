@@ -1,0 +1,125 @@
+2018-03-14-SFU-python/">Simon Fraser University</a></td>
+2018-03-12-mun/">Memorial University of Newfoundland</a></td>
+2018-03-03-conestoga/">Conestoga College</a></td>
+2018-01-18-utoronto/">University of Toronto</a></td>
+2017-12-12-acadia/">Acadia University</a></td>
+2017-12-02-mun/">Memorial University</a></td>
+2017-11-30-queensu/">Queen's University</a></td>
+2017-11-07-mcgill/">McGill University</a></td>
+2017-11-06-umontreal/">Ecole Polytechnique</a></td>
+2017-10-26-york-university/">York University</a></td>
+2017-10-16-YorkU/">York University</a></td>
+2017-09-26-ubc/">University Of British Columbia</a></td>
+2017-09-18-SFU-python/">Simon Fraser University</a></td>
+2017-07-27-McMaster/">McMaster University</a></td>
+2017-05-27-MUN/">Memorial University of Newfoundland</a></td>
+2017-05-18-McMaster/">McMaster University</a></td>
+2017-05-15-ualberta/">University of Alberta</a></td>
+2017-03-25-brocku/">Brock University</a></td>
+2017-03-11-ubc/">University Of British Columbia</a></td>
+2017-03-07-Universite-Laval/">Université Laval</a></td>
+2017-03-02-mcgill/">McGill University</a></td>
+2017-02-04-conestoga/">Conestoga College</a></td>
+2017-02-03-utoronto/">University of Toronto</a></td>
+2017-02-02-SFU/">Simon Fraser University</a></td>
+2017-01-26-utoronto/">University of Toronto</a></td>
+2016-12-07/">University of Victoria</a></td>
+2016-10-24-umontreal/">Université de Montréal</a></td>
+2016-10-05-SFU/">Simon Fraser University</a></td>
+2016-10-03-sfu/">Simon Fraser University</a></td>
+2016-09-29-ubc/">University Of British Columbia</a></td>
+2016-09-20-ubc/">University of British Columbia - EOAS</a></td>
+2016-09-17-uwaterloo/">University of Waterloo</a></td>
+2016-09-14-yorku/">York UNiversity</a></td>
+2016-09-13-Universite-Laval/">Calcul Québec, Université Laval</a></td>
+2016-09-08-mcgill/">McGill University</a></td>
+2016-06-01-mcgill/">McGill University</a></td>
+2016-05-26-utoronto/">University of Toronto</a></td>
+2016-05-24-mcmaster/">McMaster University, Kenneth Taylor Hall (KTH) B121</a></td>
+2016-05-17-UBC/">UBC Koerner Library</a></td>
+2016-05-14-ubc/">University of British Columbia</a></td>
+2016-05-09-utoronto/">University of Toronto</a></td>
+2016-05-05-uwaterloo/">University of Waterloo</a></td>
+2016-05-05-saintmarys/">Saint Mary's University</a></td>
+2016-04-28-ualberta/">University of Alberta</a></td>
+2016-04-25-utoronto/">University of Toronto</a></td>
+2016-04-02-conestoga/">Conestoga College</a></td>
+2016-03-19-brocku/">Brock University</a></td>
+2016-03-12-ubc/">University of British Columbia</a></td>
+2016-03-01-Universite-Laval/">Calcul Québec, Université Laval</a></td>
+2016-02-22-ubco/">University of British Columbia Okanagan</a></td>
+2016-02-18-ucalgary/">University of Calgary</a></td>
+2016-02-17-queens/">Queen's University, Sir John A. MacDonald Hall Room 2</a></td>
+2016-02-16-ualberta/">University of Alberta</a></td>
+2016-02-06-uguelph/">University of Guelph</a></td>
+2016-02-02-SFU/">Simon Fraser University</a></td>
+2016-01-16-waterloo/">University of Waterloo</a></td>
+2016-01-16-ubc/">University of British Columbia</a></td>
+2016-01-09-uwo/">Western University</a></td>
+2015-11-19-utoronto/">University of Toronto</a></td>
+2015-11-09-SWC-UQAM/">Calcul Québec, UQAM</a></td>
+2015-10-27-SWC-Universite-Laval/">Calcul Québec, Université Laval</a></td>
+2015-10-26-umanitoba/">University of Manitoba</a></td>
+2015-10-19-ualberta/">University of Alberta</a></td>
+2015-10-19-SWC-Acadia/">Acadia University</a></td>
+2015-10-17-SFU/">Simon Fraser University</a></td>
+2015-10-05-UC/">University of Calgary</a></td>
+2015-09-26-conestoga/">Conestoga College</a></td>
+2015-09-22-ubc/">University of British Columbia</a></td>
+2015-09-19-uwaterloo/">University of Waterloo</a></td>
+2015-08-27-ualberta/">University of Alberta</a></td>
+2015-07-24-LSIUBC/">Life Sciences Institute, UBC</a></td>
+2015-07-16-sickkids/">Hospital For Sick Children</a></td>
+2015-06-25-wise-toronto/">Women in Science and Engineering, University of Toronto</a></td>
+2015-05-11-westernu/">Western University</a></td>
+2015-04-30-SFU/">Simon Fraser University</a></td>
+2015-03-21-uwaterloo/">University of Waterloo</a></td>
+2015-03-05-ubc/">University of British Columbia - Faculty of Science</a></td>
+2015-02-05-toronto/">University of Toronto iSchool</a></td>
+2016-01-29-UBC/">University of British Columbia</a></td>
+2015-01-29-sickkids/">The Hospital For Sick Children</a></td>
+2015-01-27-ubc/">University of British Columbia</a></td>
+2015-01-10-mcgill/">McGill University</a></td>
+2015-01-08-uoit/">University of Ontario Institute of Technology</a></td>
+2014-11-06-fmv/">GREZOSP</a></td>
+2014-10-30-utoronto/">University of Toronto</a></td>
+2014-10-06-rotman/">University of Toronto</a></td>
+2014-09-25-ubc/">University of British Columbia</a></td>
+2014-09-13-uwaterloo/">Unversity of Waterloo</a></td>
+2014-07-14-Dalhousie/">Dalhousie University</a></td>
+2014-07-08-wise-toronto/">Women in Science and Engineering (Toronto)</a></td>
+2014-07-02-smu/">Saint Mary's University</a></td>
+2014-06-22-caims/">Canadian Applied and Industrial Mathematics Society</a></td>
+2014-06-16-toronto/">Mozilla Toronto</a></td>
+2014-05-12-ubc/">bioinformatics.ca</a></td>
+2014-05-12-oicr-toronto/">Ontario Institute for Cancer Research</a></td>
+2014-05-05-mcmaster/">McMaster University Wong e-Classroom</a></td>
+2014-04-14-pycon-r/">R for Python Programmers</a></td>
+2014-04-14-pycon-ngs/">Next-Generation Sequencing</a></td>
+2014-04-14-pycon-lib/">Software Skills for Librarians</a></td>
+2014-04-14-pycon/">Software Skills for Scientists and Engineers</a></td>
+2014-04-02-uvic/">University of Victoria</a></td>
+2014-02-22-SFU/">Simon Fraser University</a></td>
+2014-02-11-toronto/">Mozilla Toronto</a></td>
+2014-01-20-montreal/">CRIM (Montreal)</a></td>
+2014-01-06-unb/">University of New Brunswick</a></td>
+2013-09-26-ubc/">University of British Columbia</a></td>
+2013-09-21-uwaterloo/">University of Waterloo</a></td>
+2013-06-06-sfu/">Simon Fraser University</a></td>
+2013-05-30-alberta/">University of Alberta</a></td>
+2013-05-09-mozilla/">Mozilla Foundation (Toronto)</a></td>
+2013-02-05-ubc/">University of British Columbia</a></td>
+2013-01-24-camh/">Mozilla Foundation</a></td>
+2013-01-21-ubc/">University of British Columbia</a></td>
+2013-01-12-waterloo/">University of Waterloo</a></td>
+2013-01-12-mcgill/">McGill University</a></td>
+2013-01-11-ubc/">University of British Columbia</a></td>
+2012-11-08-mcmaster/">McMaster University</a></td>
+2012-10-18-ubc/">University of British Columbia</a></td>
+2012-07-19-utsc/">University of Toronto (Scarborough)</a></td>
+2012-07-16-halifax/">Halifax</a></td>
+2012-07-12-waterloo/">University of Waterloo</a></td>
+2012-05-22-ubc/">University of British Columbia</a></td>
+2012-05-16-alberta/">University of Alberta</a></td>
+2012-02-23-toronto/">University of Toronto</a></td>
+2011-11-07-toronto/">University of Toronto</a></td>
